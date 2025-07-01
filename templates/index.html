@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultation Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue:  #3498db;
+            --darker-blue: #1e3a8a;
+            --light-blue: #f0f7ff;
+            --border-color: #e5e7eb;
+            --text-color: #374151;
+            --sidebar-width: 280px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9fafb;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Header styling */
+        header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+        }
+        
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        /* Layout */
+        .main-container {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* Sidebar styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            height: calc(100vh - 64px);
+            position: sticky;
+            top: 64px;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+        
+        .sidebar h3 {
+            color: var(--darker-blue);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .chat-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .chat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            transition: background-color 0.2s;
+        }
+        
+        .chat-item:hover {
+            background-color: var(--light-blue);
+        }
+        
+        .chat-link {
+            color: var(--text-color);
+            text-decoration: none;
+            flex: 1;
+        }
+        
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            padding: 0.4rem;
+            border-radius: 4px;
+            opacity: 0.7;
+            transition: opacity 0.2s, background-color 0.2s;
+        }
+        
+        .delete-btn:hover {
+            background-color: #fee2e2;
+            opacity: 1;
+        }
+        
+        /* Main content area */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+        
+        h2 {
+            color: var(--darker-blue);
+            margin-top: 0;
+            font-weight: 600;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .consultation-form {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            max-width: 600px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+            color: var(--darker-blue);
+        }
+        
+        .input-group {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        
+        .input-group:focus-within {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        
+        .input-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1rem;
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+        }
+        
+        button[type="submit"] {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.85rem 1.75rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        
+        button[type="submit"]:hover {
+            background-color: var(--darker-blue);
+        }
+        
+        /* Empty state */
+        .empty-state {
+            color: #9ca3af;
+            font-style: italic;
+            padding: 0.75rem;
+        }
+        
+        /* Medication reminder styles */
+        .section-divider {
+            margin: 2rem 0 1.5rem 0;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .medication-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .medication-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            background-color: #f8f9fa;
+            border-left: 3px solid var(--primary-blue);
+        }
+        
+        .medication-icon {
+            color: var(--primary-blue);
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+        }
+        
+        .medication-details {
+            flex: 1;
+        }
+        
+        .medication-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .medication-time {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+        
+        .add-medication {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            color: var(--primary-blue);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .add-medication:hover {
+            background-color: var(--light-blue);
+        }
+        
+        .add-icon {
+            margin-right: 0.75rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .main-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with blue background -->
+    <header>
+        <div class="header-container">
+            <div class="logo">Consultation Portal</div>
+        </div>
+    </header>
+    
+    <div class="main-container">
+        <!-- Left sidebar for previous consultations (ChatGPT style) -->
+        <div class="sidebar">
+            <h3>{{ translations[session.selected_language].prev_consults }}</h3>
+            <ul class="chat-list">
+                {% for chat in past_chats %}
+                    <li class="chat-item">
+                        <a href="{{ url_for('view_chat', chat_id=chat._id) }}" class="chat-link">
+                            {{ chat.timestamp.strftime('%b %d, %Y %H:%M') }}
+                        </a>
+                        <form method="POST" action="{{ url_for('delete_chat', chat_id=chat._id) }}" style="display:inline;">
+                            <button type="submit" class="delete-btn">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </li>
+                {% endfor %}
+                
+                {% if not past_chats %}
+                    <li class="empty-state">No previous consultations</li>
+                {% endif %}
+            </ul>
+            
+            <!-- Medication reminder section with divider -->
+            <div class="container">
+                
+                <button 
+                    style="
+                        background-color: #3498db;
+                      color: white;
+                      padding: 12px 24px;
+                      border: none;
+                      border-radius: 8px;
+                      cursor: pointer;
+                      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                      font-weight: bold;
+                      display: block;
+                      margin: 0 auto 20px;
+                      font-size: 1rem;
+                    "
+                    onclick="window.location.href='http://127.0.0.1:4004'"
+                >
+                    Medication Remainder
+                </button>
+
+                
+            </div>
+            
+        </div>
+        
+        <!-- Main content area -->
+        <div class="main-content">
+            <h2>{{ translations[session.selected_language].welcome }}</h2>
+            
+            <div class="consultation-form">
+                <form method="POST" action="{{ url_for('start_consultation') }}">
+                    <div class="form-group">
+                        <label for="location">{{ translations[session.selected_language].location }}</label>
+                        <div class="input-group">
+                            <div class="input-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <input type="text" id="location" name="location" placeholder="Enter your city">
+                        </div>
+                    </div>
+                    <button type="submit">Start Consultation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

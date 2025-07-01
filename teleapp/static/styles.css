@@ -1,0 +1,597 @@
+:root {
+    --primary-color: #1a6f8c;
+    --secondary-color: #2c8bb0;
+    --background-color: #f4f7f9;
+    --text-color: #333;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+    background-color: var(--white);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 50px;
+    margin-right: 15px;
+}
+
+.logo h1 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+nav a {
+    margin-left: 15px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-secondary {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-cta {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    font-size: 1.1rem;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    margin: 50px 0;
+    gap: 50px;
+}
+
+.hero-content {
+    flex: 1;
+}
+
+.hero-content h2 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.hero-image {
+    flex: 1;
+}
+
+.hero-image img {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.features {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 0;
+    text-align: center;
+}
+
+.feature {
+    flex: 1;
+    padding: 20px;
+    background-color: var(--white);
+    border-radius: 10px;
+    margin: 0 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.doctor-benefits {
+    background-color: var(--white);
+    padding: 50px 5%;
+    border-radius: 10px;
+    margin: 50px 0;
+}
+
+.doctor-benefits h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.benefit {
+    background-color: var(--background-color);
+    padding: 25px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.benefit h3 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.cta {
+    text-align: center;
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 50px 20px;
+    border-radius: 10px;
+    margin: 50px 0;
+}
+
+.cta h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+footer {
+    background-color: var(--text-color);
+    color: var(--white);
+    padding: 30px 5%;
+    text-align: center;
+}
+
+.footer-links a {
+    color: var(--white);
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .hero, .features, .benefits-grid {
+        flex-direction: column;
+        grid-template-columns: 1fr;
+    }
+
+    .feature, .benefit {
+        margin: 15px 0;
+    }
+}
+/* Login Page Specific Styles */
+.login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 20px;
+}
+
+.login-container {
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 450px;
+    overflow: hidden;
+}
+
+.login-logo {
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-logo img {
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.login-form-wrapper {
+    padding: 30px;
+}
+
+.login-form-wrapper h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.login-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+.forgot-password {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.signup-link {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .login-footer {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .login-footer a {
+        margin: 10px 0;
+    }
+}
+/* Signup Page Specific Styles */
+.signup-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 20px;
+}
+
+.signup-container {
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 700px;
+    overflow: hidden;
+}
+
+.signup-logo {
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.signup-logo img {
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.signup-form-wrapper {
+    padding: 30px;
+}
+
+.signup-form-wrapper h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-group {
+    flex: 1;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color);
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.signup-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.checkbox-container input {
+    margin-right: 10px;
+    width: auto;
+}
+
+.signup-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+.login-link {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .signup-container {
+        max-width: 100%;
+    }
+}
+/* Profile Page Specific Styles */
+.profile-body {
+    background-color: var(--background-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.profile-container {
+    width: 100%;
+    max-width: 900px;
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.profile-header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.profile-header-content {
+    display: flex;
+    align-items: center;
+}
+
+.profile-avatar {
+    margin-right: 20px;
+}
+
+.profile-avatar img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--white);
+}
+
+.profile-header-info h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.profile-header-info .profile-specialization {
+    opacity: 0.8;
+    margin: 5px 0 0;
+}
+
+.profile-nav {
+    display: flex;
+    gap: 10px;
+}
+
+.profile-main {
+    display: flex;
+    padding: 30px;
+    gap: 30px;
+}
+
+.profile-details {
+    flex: 2;
+}
+
+.profile-section {
+    background-color: var(--background-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.profile-section h2 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.profile-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.info-item label {
+    display: block;
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.bio-content {
+    background-color: var(--white);
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.profile-edit {
+    flex: 1;
+}
+
+.edit-profile-form .form-group {
+    margin-bottom: 15px;
+}
+
+.profile-footer {
+    background-color: var(--background-color);
+    padding: 20px;
+}
+
+.profile-stats {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+    .profile-main {
+        flex-direction: column;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-header-content {
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    .profile-avatar {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .profile-nav {
+        width: 100%;
+        justify-content: center;
+    }
+}

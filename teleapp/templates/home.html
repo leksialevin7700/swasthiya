@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedPro Connect - Doctor Enrollment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="MedPro Connect Logo">
+            <h1>MedPro Connect</h1>
+        </div>
+        <nav>
+            <a href="{{ url_for('signup') }}" class="btn btn-secondary">Register as Doctor</a>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary">Doctor Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Expand Your Medical Practice Online</h2>
+                <p>Join our platform and connect with patients through secure, convenient telemedicine services. Manage your professional profile and consultations seamlessly.</p>
+            </div>
+            <div class="hero-image">
+                <img src="{{ url_for('static', filename='images/doctor-profile.jpg') }}" alt="Doctor Professional Profile">
+                <img src="{{ url_for('static', filename='images/d2.jpg') }}" alt="Doctor Professional Profile">
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature">
+                <div class="feature-icon">📋</div>
+                <h3>Complete Professional Profile</h3>
+                <p>Create a comprehensive profile showcasing your expertise, specialties, and qualifications.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🗓️</div>
+                <h3>Flexible Consultation Management</h3>
+                <p>Control your availability, set consultation rates, and manage your schedule effortlessly.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <h3>Secure & Compliant</h3>
+                <p>Ensure patient data privacy with HIPAA-compliant platform and secure communication tools.</p>
+            </div>
+        </section>
+
+        <section class="doctor-benefits">
+            <h2>Why Join MedPro Connect?</h2>
+            <div class="benefits-grid">
+                <div class="benefit">
+                    <h3>Expanded Patient Reach</h3>
+                    <p>Connect with patients beyond your local area, increasing your practice's potential.</p>
+                </div>
+                <div class="benefit">
+                    <h3>Professional Network</h3>
+                    <p>Collaborate and consult with other healthcare professionals on our platform.</p>
+                </div>
+                <div class="benefit">
+                    <h3>Advanced Tools</h3>
+                    <p>Access cutting-edge telemedicine tools and patient management systems.</p>
+                </div>
+                <div class="benefit">
+                    <h3>Additional Income Stream</h3>
+                    <p>Supplement your practice with flexible online consultations.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <h2>Ready to Elevate Your Medical Practice?</h2>
+            <p>Join MedPro Connect and transform the way you provide healthcare.</p>
+            <a href="{{ url_for('signup') }}" class="btn btn-cta">Register Now</a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/about">About MedPro</a>
+                <a href="/requirements">Doctor Requirements</a>
+                <a href="/support">Support</a>
+                <a href="/terms">Terms of Service</a>
+            </div>
+            <div class="footer-info">
+                <p>&copy; 2025 MedPro Connect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

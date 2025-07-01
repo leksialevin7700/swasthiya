@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Hospital Locations</h1>
+    <div id="map" style="height: 500px;"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <script>
+        var map = L.map('map').setView([{{ map_data[0].lat }}, {{ map_data[0].lon }}], 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+        }).addTo(map);
+
+        {% for hospital in map_data %}
+            L.marker([{{ hospital.lat }}, {{ hospital.lon }}])
+                .addTo(map)
+                .bindPopup("{{ hospital.name }}<br>{{ hospital.address }}");
+        {% endfor %}
+    </script>
+{% endblock %}

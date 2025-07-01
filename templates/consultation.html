@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Assistant Bot 🩺</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        :root {
+            --primary-blue: #3498db;
+            --darker-blue: #1e3a8a;
+            --light-blue: #f0f7ff;
+            --border-color: #e5e7eb;
+            --text-color: #374151;
+            --sidebar-width: 280px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --secondary-text: #6b7280;
+            --success-color: #10b981;
+            --white: #ffffff;
+            --light-gray: #f9fafb;
+            --message-gray: #f3f4f6;
+        }
+
+        /* Add new image preview styles */
+        .uploaded-image {
+            max-width: 200px;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .uploaded-image:hover {
+            transform: scale(1.05);
+        }
+
+        .image-preview-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .image-caption {
+            font-size: 0.8em;
+            color: var(--secondary-text);
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .file-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            background-color: var(--chat-bg);  /* Changed to chat background color */
+            display: flex;
+            min-height: 100vh;
+            background-image: linear-gradient(to right, #e6f7ff, #f5f8fa);
+        }
+        
+        /* Sidebar styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--white);
+            border-right: 1px solid var(--border-color);
+            padding: 10px;
+            box-shadow: var(--shadow);
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--light-blue);
+        }
+        
+        .sidebar-header h3 {
+            color: var(--darker-blue);
+            font-size: 22px;
+            margin: 0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .new-chat-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px; /* Reduced padding */
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .new-chat-button:hover {
+            background-color: var(--darker-blue);
+        }
+        
+        /* Main content area */
+        .main-content {
+            position: relative; 
+            flex-grow: 1;
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+            background-color: var(--chat-bg);  /* Changed the main content background */
+        }
+        
+        /* Chat container */
+        #chat-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px 30px 80px;
+            margin-bottom: 20px;
+            background-image: linear-gradient(to right, #e6f7ff, #f5f8fa);
+        }
+        
+        .message {
+            display: flex;
+            margin-bottom: 20px;
+            max-width: 85%;
+        }
+        
+        .user-message {
+            margin-left: auto;
+            flex-direction: row-reverse;
+        }
+        
+        .bot-message {
+            margin-right: auto;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .bot-avatar {
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+        }
+        
+        .user-avatar {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+        
+        .message-content {
+            background-color: var(--message-gray);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 0 10px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .user-message .message-content {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+        
+        .bot-message .message-content {
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+        }
+        
+        .message-content p {
+            margin: 0 0 10px 0;
+        }
+        
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Typing area */
+        .typing-area {
+            position: sticky;
+            bottom: 0;
+            background: var(--white);
+            padding: 15px 30px 50px; /* Adjusted padding */
+            margin-top: auto; /* Pushes it to bottom */
+            z-index: 1000;
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        
+        .input-container {
+            display: flex;
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        .input-container input {
+            flex-grow: 1;
+            border: none;
+            padding: 10px 0;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .input-container button {
+            background: none;
+            border: none;
+            color: var(--primary-blue);
+            cursor: pointer;
+            padding: 0 10px;
+            transition: color 0.3s;
+        }
+        
+        .input-container button:hover {
+            color: var(--darker-blue);
+        }
+        
+        /* File upload styling */
+        .file-upload {
+            margin-top: 15px;
+        }
+        
+        .file-upload form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .file-upload label {
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+        
+        .file-upload label:hover {
+            background-color: #dbeafe;
+        }
+        
+        .file-upload input[type="file"] {
+            display: none;
+        }
+        
+        .btn {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--darker-blue);
+        }
+        
+        /* Analysis section */
+        .analysis-section {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        
+        .analysis-section h2 {
+            color: var(--darker-blue);
+            font-size: 24px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--light-blue);
+            padding-bottom: 10px;
+        }
+        
+        .analysis-section h3 {
+            color: var(--primary-blue);
+            font-size: 18px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .analysis-section p {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        
+        .analysis-section ul {
+            padding-left: 20px;
+        }
+        
+        .analysis-section li {
+            margin-bottom: 12px;
+        }
+        
+        #map {
+            height: 300px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .download-report {
+            display: inline-block;
+            background-color: var(--success-color);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .download-report:hover {
+            background-color: #0d9488;
+        }
+        
+        /* Text in the typing area for file upload needs to be white on blue background */
+        .typing-area > p {
+            color: white;
+            font-weight: 500;
+        }
+        /* From Uiverse.io by adamgiebl */ 
+        .loading-dots {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Changed from center */
+            height: 100%;
+            width: auto; /* Changed from 100% */
+            gap: 8px; /* Added gap instead of margin-right */
+            padding: 8px 12px;
+          }
+
+          .dot {
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background-color: #3498db;
+            animation: pulse 1.5s infinite ease-in-out;
+            
+          }
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    background-color: #b3d4fc;
+    box-shadow: 0 0 0 0 rgba(178, 212, 252, 0.7);
+  }
+
+  50% {
+    transform: scale(1.2);
+    background-color: #6793fb;
+    box-shadow: 0 0 0 10px rgba(178, 212, 252, 0);
+  }
+
+  100% {
+    transform: scale(0.8);
+    background-color: #b3d4fc;
+    box-shadow: 0 0 0 0 rgba(178, 212, 252, 0.7);
+  }
+}
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 15px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+                height: auto;
+            }
+            
+            .message {
+                max-width: 95%;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Health Assistant 🩺</h3>
+        </div>
+        <button class="new-chat-button">
+            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="24" width="24" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span style="margin-left: 10px;">New consultation</span>
+        </button>
+        <div id="past-chats">
+        </div>
+        <!-- History would go here in a real implementation -->
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <div id="chat-container">
+            {% if session.get('chat_history') %}
+                {% for msg in session['chat_history'] %}
+                <div class="message {% if msg['role'] == 'assistant' %}bot-message{% else %}user-message{% endif %}">
+                    <div class="avatar {% if msg['role'] == 'assistant' %}bot-avatar{% else %}user-avatar{% endif %}">
+                        {% if msg['role'] == 'assistant' %}🩺{% else %}👤{% endif %}
+                    </div>
+                    <div class="message-content">
+                        {% if msg.type == 'image' %}
+                            <div class="image-preview-container">
+                                <img src="{{ msg.content }}" class="uploaded-image">
+                                <div class="image-caption">Uploaded Image</div>
+                            </div>
+                        {% else %}
+                            {% if msg['role'] == 'assistant' and loop.last %}
+                                <div class="loading-dots">
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </div>
+                                <div class="actual-content" style="display: none;">
+                                    {{ msg['content'] | safe }}
+                                </div>
+                            {% else %}
+                                {{ msg['content'] | safe }}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="message bot-message">
+                    <div class="avatar bot-avatar">🩺</div>
+                    <div class="message-content">
+                        <p>Hello! I'm your Health Assistant. How can I help you today?</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <button class="btn" style="position: absolute; top: 20px; right: 20px; z-index: 10;" onclick="location.reload()">
+            🔄 Finish
+        </button>
+
+        {% set lang = session.get('selected_language', 'en') %}
+        <!-- Input area -->
+        {% if session['step'] == 'issue_type' %}
+        <div class="typing-area">
+            <form method="POST" class="input-container">
+                <input type="text" name="issue" placeholder="{{ translations[lang].whats_bothering }}" required>
+                <button type="submit">
+                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </form>
+        </div>
+
+        {% elif session['step'] == 'skin_image' %}
+        <div class="typing-area">
+            <div class="file-upload">
+                <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_skin_image') }}" id="upload-form">
+                    <label for="file-input" id="file-label" class="file-label">
+                        <span id="file-text">{{ translations[lang].choose_image }}</span>
+                        <div id="image-preview" class="image-preview-container"></div>
+                    </label>
+                    <input id="file-input" type="file" name="file" accept="image/*" required 
+                           onchange="previewImage(event)">
+                    <button type="submit" class="btn">{{ translations[lang].upload }}</button>
+                </form>
+            </div>
+        </div>
+
+        {% elif session['step'] in ['skin_questions', 'general_questions'] %}
+        <div class="typing-area">
+            <form method="POST" class="input-container">
+                <input type="text" name="answer" placeholder="Your answer..." required>
+                <button type="submit">
+                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </form>
+        </div>
+
+        {% elif session['step'] == 'complete' %}
+        
+        <div class="analysis-section">
+            <h2>{{ translations[lang].analysis_title }}</h2>
+            <h3>{{ translations[lang].patient_info }}</h3>
+            <p>{{ translations[lang].age }}: {{ session['user_info']['age'] }}</p>
+            <p>{{ translations[lang].gender }}: {{ session['user_info']['gender'] }}</p>
+            <p>{{ translations[lang].location }}: {{ session['user_info']['location'] }}</p>
+
+            <h3>{{ translations[lang].medical_analysis }}</h3>
+            <p>{{ session['analysis_text'] }}</p>
+
+            {% if session.get('hospital_info') %}
+            <h3>{{ translations[lang].hospitals }}</h3>
+            <ul>
+            {% for hospital in session['hospital_info'] %}
+            <li>
+                <strong>{{ hospital.name }}</strong><br>
+                {{ translations[lang].address }}: {{ hospital.address }}
+            </li>
+            {% endfor %}
+            </ul>
+
+            <div id="map"></div>
+            <script>
+            var map = L.map('map').setView([{{ session['hospital_info'][0]['lat'] }}, {{ session['hospital_info'][0]['lon'] }}], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map);
+            {% for hospital in session['hospital_info'] %}
+            L.marker([{{ hospital.lat }}, {{ hospital.lon }}])
+            .addTo(map)
+            .bindPopup("{{ hospital.name }}<br>{{ hospital.address }}");
+            {% endfor %}
+            </script>
+            {% endif %}
+
+            <a href="{{ url_for('generate_report') }}" class="download-report">Download Medical Report (PDF)</a>
+        </div>
+        {% endif %}
+        <!-- Add this block after the hospital information section -->
+{% if session['step'] == 'complete' %}
+<div style="position: fixed; bottom: 20px; right: 20px;">
+  <button 
+    style="
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      font-weight: bold;
+    "
+    onclick="window.location.href='http://127.0.0.1:5001/'"
+  >
+    Telemedicine🩺 {{ translations[lang].telemedicine_button }}
+  </button>
+</div>
+{% endif %}
+    </div>
+    <script>
+        function previewImage(event) {
+            const input = event.target;
+            const previewContainer = document.getElementById('image-preview');
+            const fileText = document.getElementById('file-text');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    previewContainer.innerHTML = `
+                        <img src="${e.target.result}" class="uploaded-image">
+                        <div class="image-caption">${input.files[0].name}</div>
+                    `;
+                    fileText.style.display = 'none';
+                };
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.uploaded-image').forEach(img => {
+                img.onclick = function() {
+                    const modal = document.createElement('div');
+                    modal.style.position = 'fixed';
+                    modal.style.top = '0';
+                    modal.style.left = '0';
+                    modal.style.width = '100%';
+                    modal.style.height = '100%';
+                    modal.style.backgroundColor = 'rgba(0,0,0,0.8)';
+                    modal.style.zIndex = '10000';
+                    modal.style.display = 'flex';
+                    modal.style.alignItems = 'center';
+                    modal.style.justifyContent = 'center';
+                    
+                    const fullSizeImg = new Image();
+                    fullSizeImg.src = this.src;
+                    fullSizeImg.style.maxHeight = '90vh';
+                    fullSizeImg.style.maxWidth = '90vw';
+                    fullSizeImg.style.borderRadius = '8px';
+                    
+                    modal.onclick = function() {
+                        document.body.removeChild(modal);
+                    };
+                    
+                    modal.appendChild(fullSizeImg);
+                    document.body.appendChild(modal);
+                };
+            });
+
+                // Handle loading animation and auto-advance
+                const lastBotMessage = document.querySelector('.bot-message:last-child');
+                
+                if (lastBotMessage) {
+                    const loader = lastBotMessage.querySelector('.loading-dots');
+                    const content = lastBotMessage.querySelector('.actual-content');
+                    
+                    if (loader && content) {
+                        setTimeout(() => {
+                            loader.style.display = 'none';
+                            content.style.display = 'block';
+        
+                            // Auto-advance detection
+                            if (content.textContent.includes("Thank you. Let's begin by asking")) {
+                                const form = document.querySelector('form');
+                                if (form) {
+                                    const hiddenInput = document.createElement('input');
+                                    hiddenInput.type = 'hidden';
+                                    hiddenInput.name = 'auto_advance';
+                                    hiddenInput.value = 'true';
+                                    form.appendChild(hiddenInput);
+                                    
+                                    // Submit without user input
+                                    setTimeout(() => form.submit(), 500);
+                                }
+                            }
+                        }, 4000);
+                    }
+                }
+        
+                // Auto-scroll setup
+                const chatContainer = document.getElementById('chat-container');
+                const observer = new MutationObserver(() => {
+                    chatContainer.scrollTo({
+                        top: chatContainer.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                });
+        
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                observer.observe(chatContainer, { childList: true, subtree: true });
+            });
+        
+        </script>
+        
+</body>
+</html>

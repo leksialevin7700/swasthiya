@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Listings - MedPro Connect</title>
+    <style>
+        :root {
+        --primary-color: #1a6f8c;
+        --secondary-color: #2c8bb0;
+        --background-color: #f4f7f9;
+        --text-color: #333;
+        --white: #ffffff;
+        --gradient-primary: linear-gradient(135deg, #1a6f8c, #2c8bb0);
+    --gradient-secondary: linear-gradient(135deg, #2c8bb0, #4ab9d5);
+        }
+        
+        body {
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        }
+        
+        header {
+        background-color: var(--primary-color);
+        color: var(--white);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 5%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+        display: flex;
+        align-items: center;
+        }
+        
+        .logo img {
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+        border-radius: 50%;
+        }
+        
+        .logo h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        }
+        
+        nav {
+        display: flex;
+        gap: 15px;
+        }
+        
+        .btn {
+        text-decoration: none;
+        padding: 8px 15px;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+        }
+        
+        .btn-secondary {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        }
+        
+        .btn-secondary:hover {
+        background-color: var(--primary-color);
+        opacity: 0.9;
+        }
+        
+        main {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 5%;
+        }
+        
+        .doctor-listings h2 {
+        text-align: center;
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+        }
+        
+        form {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+        }
+        
+        form input {
+        padding: 10px;
+        width: 300px;
+        border: 1px solid #ddd;
+        border-radius: 4px 0 0 4px;
+        }
+        
+        form button {
+        padding: 10px 15px;
+        background-color: var(--secondary-color);
+        color: var(--white);
+        border: none;
+        border-radius: 0 4px 4px 0;
+        cursor: pointer;
+        }
+        
+        form button:hover {
+        background-color: var(--primary-color);
+        opacity: 0.9;
+        }
+        
+        .doctor-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        }
+        
+        .doctor-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+        }
+        
+        .doctor-card:hover {
+        transform: translateY(-5px);
+        }
+        
+        .doctor-card h3 {
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        border-bottom: 2px solid var(--secondary-color);
+        padding-bottom: 5px;
+        }
+        
+        footer {
+        background-color: var(--primary-color);
+        color: var(--white);
+        text-align: center;
+        padding: 1rem;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+        header {
+        flex-direction: column;
+        text-align: center;
+        }
+        
+        nav {
+        margin-top: 1rem;
+        }
+        
+        .doctor-grid {
+        grid-template-columns: 1fr;
+        }
+        }
+        .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 30%;
+        border-radius: 8px;
+        }
+        .close {
+        float: right;
+        cursor: pointer;
+        }
+        .book-btn {
+            background: var(--gradient-secondary);
+            color: var(--white);
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            margin-top: 15px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .book-btn:hover {
+            background: var(--gradient-primary);
+            box-shadow: 0 6px 15px rgba(26, 111, 140, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .book-btn:active {
+            transform: translateY(0);
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+
+            <h1>MedPro Connect</h1>
+        </div>
+        <nav>
+            <a href="/" class="btn btn-secondary">Home</a>
+            <a href="http://127.0.0.1:3002/" class="btn btn-secondary">Register as Doctor</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="doctor-listings">
+            <h2>Available Doctors</h2>
+
+            <form action="/" method="get">
+                <input type="text" name="specialization" placeholder="Search by specialization..." value="{{ specialization }}">
+                <button type="submit">Search</button>
+            </form>
+
+            <div class="doctor-grid">
+                {% if doctors %}
+                    {% for doctor in doctors %}
+                    <div class="doctor-card">
+                        <h3>{{ doctor['name'] }}</h3>
+                        <p><strong>Specialization:</strong> {{ doctor['specialization'] }}</p>
+                        <p><strong>Email:</strong> {{ doctor['email'] }}</p>
+                        <p><strong>Experience:</strong> {{ doctor['experience'] }} years</p>
+                        <p>{{ doctor['description'] }}</p>
+                        <button class="book-btn" data-email="{{ doctor['email'] }}" onclick="openModal(this.getAttribute('data-email'))">Book Appointment</button>
+
+
+
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No doctors found for this specialization.</p>
+                {% endif %}
+            </div>
+            <div id="appointmentModal" class="modal">
+                <div class="modal-content">
+                  <span class="close" onclick="closeModal()">&times;</span>
+                  <h3>Book Appointment</h3>
+                  <label>Select Date & Time:</label>
+                  <input type="datetime-local" id="appointmentTime">
+                  <input type="hidden" id="doctorEmail">
+                  <button onclick="bookAppointment()">Next</button>
+                </div>
+              </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 MedPro Connect. All rights reserved.</p>
+    </footer>
+    <script>
+        function openModal(email) { // Now accepts name parameter
+            document.getElementById('doctorEmail').value = email;
+            
+            document.getElementById('appointmentModal').style.display = 'block';
+        }
+
+        
+        function closeModal() {
+          document.getElementById('appointmentModal').style.display = 'none';
+        }
+        
+        
+        function bookAppointment() {
+    const email = document.getElementById('doctorEmail').value;
+    const time = document.getElementById('appointmentTime').value;
+    const formattedTime = new Date(time).toLocaleString();
+    
+    // Get the doctor's name dynamically
+    const doctorCard = document.querySelector(`.book-btn[data-email="${email}"]`).closest('.doctor-card');
+    const doctorName = doctorCard.querySelector('h3').innerText;
+
+    const subject = 'Appointment Request';
+    const body = `Dear Dr. ${doctorName},
+
+I hope this message finds you well. I would like to schedule an appointment 
+for a medical consultation on ${formattedTime}. 
+
+Could you please confirm if this time slot is available in your schedule? 
+If this time doesn't work, I'd be happy to accommodate your earliest 
+convenient time.
+
+Looking forward to your response.
+
+Best regards.`;
+
+    window.location.href = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+        </script>
+</body>
+</html>

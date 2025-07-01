@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Profile - MedPro Connect</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Meet Links Styling */
+        .meet-links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .meet-link-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .meet-link {
+            color: #0066cc;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .meet-link:hover {
+            text-decoration: underline;
+        }
+
+        .meet-links-actions {
+            margin-top: 10px;
+        }
+
+        .inline-form {
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .meet-links-list {
+            margin-top: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .meet-link-manage-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .meet-link-manage-item:last-child {
+            border-bottom: none;
+        }
+
+        .meet-link-text {
+            word-break: break-all;
+            margin-right: 10px;
+            flex: 1;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        
+        /* Flash messages */
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+        
+        .flash-message {
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .flash-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .flash-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .flash-warning {
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+            color: #856404;
+        }
+        
+        .flash-info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        
+        /* Profile picture styling */
+        .profile-picture-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-picture-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e9ecef;
+            color: #6c757d;
+            font-size: 36px;
+        }
+        
+        .profile-header-content {
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-header-info {
+            margin-left: 20px;
+        }
+        
+        /* Longer save button */
+        .btn-save {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-save:hover {
+            background-color: #0069d9;
+        }
+        
+        /* Improved logout button */
+        .btn-logout {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-logout:hover {
+            background-color: #c82333;
+            text-decoration: none;
+            color: white;
+        }
+        
+        /* Profile picture upload */
+        .profile-pic-upload {
+            margin-top: 10px;
+        }
+        
+        .profile-pic-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .custom-file-upload {
+            display: inline-block;
+            padding: 8px 12px;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .custom-file-upload:hover {
+            background-color: #e9ecef;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .selected-file-name {
+            margin-left: 10px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body class="profile-body">
+    <div class="profile-container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <header class="profile-header">
+            <div class="profile-header-content">
+                <div class="profile-picture">
+                    {% if user.get('profile_pic') %}
+                        <img src="{{ user['profile_pic'] }}" alt="{{ user['name'] }}'s profile picture">
+                    {% else %}
+                        <div class="profile-picture-placeholder">
+                            {{ user['name'][0].upper() }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="profile-header-info">
+                    <h1>{{ user['name'] }}</h1>
+                    <p class="profile-specialization">{{ user['specialization'].replace('_', ' ').title() }} Specialist</p>
+                </div>
+            </div>
+            <nav class="profile-nav">
+                <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+            </nav>
+        </header>
+
+        <main class="profile-main">
+            <section class="profile-details">
+                <div class="profile-section">
+                    <h2>Professional Information</h2>
+                    <div class="profile-info-grid">
+                        <div class="info-item">
+                            <label>Email</label>
+                            <p>{{ user['email'] }}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Experience</label>
+                            <p>{{ user['experience'] }} Years</p>
+                        </div>
+                        <div class="info-item full-width">
+                            <label>Specialization</label>
+                            <p>{{ user['specialization'].replace('_', ' ').title() }}</p>
+                        </div>
+                        
+                        <!-- Meet Links Section -->
+                        <div class="info-item full-width">
+                            <label>Video Consultation Links</label>
+                            {% if user.get('meet_links') and user.get('meet_links')|length > 0 %}
+                                <div class="meet-links-container">
+                                    {% for link in user.get('meet_links', []) %}
+                                        <div class="meet-link-item">
+                                            <a href="{{ link }}" target="_blank" class="meet-link">{{ link }}</a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p>No meeting links available. Add one below.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h2>Professional Bio</h2>
+                    <div class="bio-content">
+                        <p>{{ user['description'] }}</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="profile-edit">
+                <h2>Edit Profile</h2>
+                <form method="POST" action="{{ url_for('profile') }}" class="edit-profile-form" enctype="multipart/form-data">
+                    <div class="form-group profile-pic-upload">
+                        <label class="profile-pic-label">Update Profile Picture</label>
+                        <label class="custom-file-upload">
+                            <input type="file" name="profile_pic" id="profile_pic" accept="image/*" onchange="updateFileName(this)">
+                            Choose File
+                        </label>
+                        <span class="selected-file-name" id="file-name">No file chosen</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Update Professional Bio</label>
+                        <textarea id="description" name="description" required>{{ user['description'] }}</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="experience">Years of Experience</label>
+                            <input type="number" id="experience" name="experience" value="{{ user['experience'] }}" min="0" max="70" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="specialization">Specialization</label>
+                        <input type="text" id="specialization" name="specialization" value="{{ user['specialization'] }}" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-save">Save Profile Changes</button>
+                </form>
+                
+                <!-- Meet Links Management Section -->
+                <div class="profile-section">
+                    <h2>Manage Meeting Links</h2>
+                    <div class="meet-links-actions">
+                        <form method="POST" action="{{ url_for('add_meet_link') }}" class="inline-form">
+                            <button type="submit" class="btn btn-secondary">Generate New Meet Link</button>
+                        </form>
+                        
+                        {% if user.get('meet_links') and user.get('meet_links')|length > 0 %}
+                            <div class="meet-links-list">
+                                {% for link in user.get('meet_links', []) %}
+                                    <div class="meet-link-manage-item">
+                                        <span class="meet-link-text">{{ link }}</span>
+                                        <form method="POST" action="{{ url_for('remove_meet_link', link=link) }}" class="inline-form">
+                                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                        </form>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="profile-footer">
+            <div class="profile-stats">
+                <div class="stat">
+                    <span class="stat-value">{{ user.get('total_consultations', 0) }}</span>
+                    <span class="stat-label">Total Consultations</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">{{ user.get('patient_rating', 'N/A') }}</span>
+                    <span class="stat-label">Patient Rating</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">{{ user.get('active_days', 0) }}</span>
+                    <span class="stat-label">Active Days</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        function updateFileName(input) {
+            const fileName = input.files[0] ? input.files[0].name : "No file chosen";
+            document.getElementById('file-name').textContent = fileName;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultation Results</title>
+</head>
+<body>
+    <h1>{{ translations[session.selected_language].analysis_title }}</h1>
+
+    <h2>{{ translations[session.selected_language].medical_analysis }}</h2>
+    <p>{{ session.analysis_text }}</p>
+
+    <h2>{{ translations[session.selected_language].hospitals }}</h2>
+    <ul>
+        {% for hospital in hospital_info %}
+        <li>{{ hospital.name }} - {{ hospital.address }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('generate_report') }}" download="medical_report.pdf">Download PDF Report</a>
+
+    <h2>Hospital Map</h2>
+    <iframe src="{{ url_for('show_map') }}" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+
+    <a href="{{ url_for('consultation') }}">{{ translations[session.selected_language].return }}</a>
+</body>
+</html>

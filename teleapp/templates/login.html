@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Login - MedPro Connect</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="login-body">
+    <div class="login-container">
+        <div class="login-logo">
+            <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="MedPro Connect Logo">
+            <h1>MedPro Connect</h1>
+        </div>
+        <div class="login-form-wrapper">
+            <h2>Doctor Login</h2>
+            <form method="POST" class="login-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary login-btn">Login</button>
+            </form>
+            <div class="login-footer">
+                <a href="{{ url_for('signup') }}" class="signup-link">Don't have an account? Sign Up</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

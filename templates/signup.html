@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | MedBot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: linear-gradient(to right, #e6f7ff, #f5f8fa);
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto; /* Allow the container to adjust its height based on content */
+
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo-container {
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: #4a90e2;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background-color: #4a90e2;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        p {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 1.8rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            padding: 0.9rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        button {
+            background-color: #4a90e2;
+            color: #fff;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        button:hover {
+            background-color: #357abd;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(53, 122, 189, 0.3);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.8rem 0;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .divider:before,
+        .divider:after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .divider:before {
+            margin-right: 10px;
+        }
+
+        .divider:after {
+            margin-left: 10px;
+        }
+
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: calc(50% - 8px);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #444;
+            border: 1px solid #e0e0e0;
+            background-color: #fff;
+        }
+
+        .social-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-button i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .google-btn {
+            color: #ea4335;
+        }
+
+        .facebook-btn {
+            color: #1877f2;
+        }
+
+        .login-link {
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .login-link a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .login-link a:hover {
+            color: #357abd;
+            text-decoration: underline;
+        }
+
+        .flash-messages {
+            margin-bottom: 1.2rem;
+            text-align: center;
+        }
+
+        .flash-messages li {
+            list-style: none;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .flash-messages .error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .flash-messages .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sign Up</h1> <!-- Moved the heading here -->
+
+        <div class="logo-container">
+            <!-- You can add a logo here if needed -->
+        </div>
+
+        <p>Create an account to access MedBot services and start your health journey.</p>
+
+        <form method="POST" action="{{ url_for('signup') }}">
+            <label for="new_username">Username</label>
+            <input type="text" id="new_username" name="new_username" placeholder="Choose a username" required>
+
+            <label for="new_password">Password</label>
+            <input type="password" id="new_password" name="new_password" placeholder="Create a strong password" required>
+
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" min="1" max="120" placeholder="Your age" required>
+
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob" name="dob" required>
+
+            <button type="submit">Create Account</button>
+        </form>
+
+        <div class="divider">OR</div>
+
+        <!-- Social Sign-up Options -->
+        <div class="social-buttons">
+            <a href="#" class="social-button google-btn">
+                <i class="fab fa-google"></i>
+                Google
+            </a>
+            <a href="#" class="social-button facebook-btn">
+                <i class="fab fa-facebook-f"></i>
+                Facebook
+            </a>
+        </div>
+
+        <div class="login-link">
+            Already have an account? <a href="{{ url_for('login') }}">Log in</a>
+        </div>
+    </div>
+
+</html>
