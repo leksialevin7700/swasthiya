@@ -1,4 +1,4 @@
-# Swasthiya
+# SWASTHIYA
 
 **Swasthiya** is a multilingual AI-powered healthcare chatbot designed to promote inclusive care for everyone, regardless of language, location, or economic status.
 
